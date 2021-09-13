@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using HeroesApi.DTOs;
 using HeroesApi.Models;
@@ -40,10 +41,9 @@ namespace HeroesApi.Controllers
         [HttpPost]
         public ActionResult<HeroDto> AddHero(AddHeroDto addHeroDto)
         {
-            var biggestIdx = _repository.GetHeroes().Select(item => item.Id).Prepend(0).Max();
             var hero = new Hero()
             {
-                Id = biggestIdx+1,
+                Id = IdGenerator.NewId(_repository.GetHeroes()),
                 Name = addHeroDto.Name
             };
             
