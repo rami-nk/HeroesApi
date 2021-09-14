@@ -1,44 +1,46 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using HeroesApi.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace HeroesApi.Repositories
 {
     public class MySqlDbContext : DbContext, IHeroRepository
     {
-        public DbSet<Hero> tourHeroes { get; set; }
-        
+        private DbSet<Hero> TourHeroes { get; set; }
+
         public MySqlDbContext(DbContextOptions<MySqlDbContext> options)
-            : base(options) 
-        { }
-        
+            : base(options)
+        {
+        }
+
         public IEnumerable<Hero> GetHeroes()
         {
-            return tourHeroes.ToList();
+            return TourHeroes.ToList();
         }
 
         public Hero GetHero(long id)
         {
-            return tourHeroes.Find(id);
+            return TourHeroes.Find(id);
         }
 
         public void AddHero(Hero hero)
         {
-            Console.Write("hero ID: " + hero.Id);
-            tourHeroes.AddRange(hero);
+            TourHeroes.AddRange(hero);
+            SaveChanges();
         }
 
         public void UpdateHero(Hero hero)
         {
-            throw new System.NotImplementedException();
+            var currentHero = TourHeroes.Find(hero.Id);
+            Entry(currentHero).CurrentValues.SetValues(hero);
+            SaveChanges();
         }
 
         public void DeleteHero(long id)
         {
-            throw new System.NotImplementedException();
+            TourHeroes.Remove(GetHero(id));
+            SaveChanges();
         }
     }
 }

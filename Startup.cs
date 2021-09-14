@@ -24,24 +24,21 @@ namespace HeroesApi
         public void ConfigureServices(IServiceCollection services)
         {
             // MySql
-            string mySqlConnectionString = Configuration.GetConnectionString("DefaultConnection");
+            var mySqlConnectionString = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContextPool<MySqlDbContext>(options =>
                 options.UseMySql(mySqlConnectionString, ServerVersion.AutoDetect(mySqlConnectionString)));
-            
+
             // MongoDb
             services.AddSingleton<IMongoClient>(serviceProvider =>
             {
                 var configs = Configuration.GetSection(nameof(MongoDbSettings)).Get<MongoDbSettings>();
                 return new MongoClient(configs.ConnectionString);
             });
-            
-            services.AddSingleton<IHeroRepository, MongoDbHeroesRepository>();
+
+            services.AddSingleton<IHeroRepository, MySqlDbContext>();
 
             services.AddControllers();
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "HeroesApi", Version = "v1" });
-            });
+            services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo {Title = "HeroesApi", Version = "v1"}); });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -60,10 +57,7 @@ namespace HeroesApi
 
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
     }
 }

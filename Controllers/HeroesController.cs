@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using HeroesApi.DTOs;
 using HeroesApi.Models;
@@ -13,7 +12,7 @@ namespace HeroesApi.Controllers
     public class HeroesController : ControllerBase
     {
         private readonly IHeroRepository _repository;
-        
+
         public HeroesController(IHeroRepository repository)
         {
             _repository = repository;
@@ -30,10 +29,7 @@ namespace HeroesApi.Controllers
         {
             var hero = _repository.GetHero(id);
 
-            if (hero == null)
-            {
-                return NotFound();
-            }
+            if (hero == null) return NotFound();
 
             return hero.AsDto();
         }
@@ -46,7 +42,7 @@ namespace HeroesApi.Controllers
                 Id = IdGenerator.NewId(_repository.GetHeroes()),
                 Name = addHeroDto.Name
             };
-            
+
             _repository.AddHero(hero);
             return CreatedAtAction(nameof(GetHero), new {Id = hero.Id}, hero);
         }
@@ -56,11 +52,8 @@ namespace HeroesApi.Controllers
         {
             var existingHero = _repository.GetHero(id);
 
-            if (existingHero == null)
-            {
-                return NotFound();
-            }
-            
+            if (existingHero == null) return NotFound();
+
             var hero = new Hero()
             {
                 Id = existingHero.Id,
@@ -76,14 +69,10 @@ namespace HeroesApi.Controllers
         {
             var hero = _repository.GetHero(id);
 
-            if (hero == null)
-            {
-                return NotFound();
-            }
+            if (hero == null) return NotFound();
 
             _repository.DeleteHero(id);
             return Ok();
         }
-
     }
 }

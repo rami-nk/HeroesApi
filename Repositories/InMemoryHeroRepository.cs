@@ -38,7 +38,6 @@ namespace HeroesApi.Repositories
         {
             var idx = _heroes.FindIndex(listItem => listItem.Id == hero.Id);
             _heroes[idx] = hero;
-
         }
 
         public void DeleteHero(long id)

@@ -8,7 +8,6 @@ namespace HeroesApi.Repositories
 {
     public class MongoDbHeroesRepository : IHeroRepository
     {
-
         private const string DatabaseName = "heroesapi";
         private const string CollectionName = "heroes";
         private readonly IMongoCollection<Hero> _heroesCollection;
@@ -16,9 +15,10 @@ namespace HeroesApi.Repositories
 
         public MongoDbHeroesRepository(IMongoClient mongoClient)
         {
-            IMongoDatabase database = mongoClient.GetDatabase(DatabaseName);
-            _heroesCollection = database.GetCollection<Hero>(CollectionName);   
+            var database = mongoClient.GetDatabase(DatabaseName);
+            _heroesCollection = database.GetCollection<Hero>(CollectionName);
         }
+
         public IEnumerable<Hero> GetHeroes()
         {
             return _heroesCollection.Find(new BsonDocument()).ToList();

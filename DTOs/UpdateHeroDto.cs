@@ -4,7 +4,6 @@ namespace HeroesApi.DTOs
 {
     public class UpdateHeroDto
     {
-        [Required]
-        public string Name { get; init; }
+        [Required] public string Name { get; init; }
     }
 }
